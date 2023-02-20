@@ -35,8 +35,10 @@ foreach ($emailPassword in $emailPasswords) {
     # Check if the user was found
     if ($user) {
         # Add the username:password pair to the list
-        $credential = "$($user.SamAccountName):$password"
-        $credentials += $credential
+	foreach ($userlisting in ($user.SamAccountName)){
+		$credential = "$userlisting:$password"
+		$credentials += $credential
+	}
     }
 }
 
