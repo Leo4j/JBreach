@@ -36,7 +36,7 @@ foreach ($emailPassword in $emailPasswords) {
     if ($user) {
         # Add the username:password pair to the list
 	foreach ($userlisting in ($user.SamAccountName)){
-		$credential = "$userlisting:$password"
+		$credential = "$($userlisting):$password"
 		$credentials += $credential
 	}
     }
