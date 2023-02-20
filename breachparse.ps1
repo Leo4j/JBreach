@@ -76,7 +76,7 @@ Write-Host ""
 # Check the username:password pairs for matches with the Domain Admins or Enterprise Admins groups
 Write-Host "Checking " -ForegroundColor Cyan -NoNewLine
 Write-Host "username:password" -ForegroundColor Yellow -NoNewLine
-Write-Host " pairs against High-Privileged Groups" -ForegroundColor Cyan
+Write-Host " pairs against Privileged Groups" -ForegroundColor Cyan
 
 foreach ($validpair in $validpairs) {
     $username, $password = $validpair -split ':'
@@ -97,7 +97,7 @@ foreach ($validpair in $validpairs) {
 		Write-Host "$username" -ForegroundColor Green -NoNewLine;
 		Write-Host " with password " -NoNewLine;
 		Write-Host "$password" -ForegroundColor Green -NoNewLine;
-		Write-Host " belongs to a High Privileged group."
+		Write-Host " belongs to a Privileged group."
     }
 }
 
