@@ -19,6 +19,10 @@ $TargetsPath = Read-Host
 
 Write-Host ""
 
+Write-Host "Checking for matching emails..." -ForegroundColor Cyan
+
+Write-Host ""
+
 # Get the contents of the email-passwords file
 $emailPasswords = Get-Content -Path "$TargetsPath"
 
