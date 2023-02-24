@@ -64,7 +64,7 @@ $validpairs = $null
 foreach ($credential in $credentials) {
     $username, $password = $credential -split ':'
     $principalContext = New-Object System.DirectoryServices.AccountManagement.PrincipalContext([System.DirectoryServices.AccountManagement.ContextType]::Domain)
-    $isValid = $principalContext.ValidateCredentials($username, $password)
+    $isValid = $principalContext.ValidateCredentials($username, $password, 1)
 
     # Output the username:password pair if the credentials are valid
     if ($isValid) {
