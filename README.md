@@ -10,4 +10,4 @@ Please note that a Dehashed account and API key are required to access the breac
 
 ### Use the following command to run the tool:
 
-`iex(new-object net.webclient).downloadstring('')`
+`iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/Leo4j/JBreach/main/JBreach.ps1')`
