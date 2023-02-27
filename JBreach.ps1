@@ -1,7 +1,5 @@
-﻿# Define API endpoint
+# Define API endpoint
 $endpoint = "https://api.dehashed.com"
-#$dehashedemail = "london.rob8@gmail.com"
-#$dehashedkey = "nzlllkduypk6tg7gxle92jsjz6su0d74"
 $results = $null
 $custombreach = $null
 
