@@ -1,5 +1,7 @@
 ﻿# Define API endpoint
 $endpoint = "https://api.dehashed.com"
+#$dehashedemail = "london.rob8@gmail.com"
+#$dehashedkey = "nzlllkduypk6tg7gxle92jsjz6su0d74"
 $results = $null
 $custombreach = $null
 
@@ -650,20 +652,64 @@ if(!$TargetUse){
 		if($customSafeLimit){$SafeLimit = $customSafeLimit}
 		else{$SafeLimit = 1}
 	}
+	
+	elseif($Limit -eq 3){
+		Write-Host "To avoid account lockouts, our limit will be set to " -NoNewLine
+		Write-Host "1" -ForegroundColor Yellow
+		Write-Host "Changing this to a higher value will most probably lockout accounts.." -ForegroundColor Yellow
+		Write-Host ""
+		$customSafeLimit = Read-Host "Do you want to set a custom limit ? Please provide a number or leave empty"
+		Write-Host ""
+		if($customSafeLimit){$SafeLimit = $customSafeLimit}
+		else{$SafeLimit = 1}
+	}
+	
+	elseif($Limit -eq 4){
+		Write-Host "To avoid account lockouts, our limit will be set to " -NoNewLine
+		Write-Host "2" -ForegroundColor Yellow
+		Write-Host "Changing this to a higher value will most probably lockout accounts.." -ForegroundColor Yellow
+		Write-Host ""
+		$customSafeLimit = Read-Host "Do you want to set a custom limit ? Please provide a number or leave empty"
+		Write-Host ""
+		if($customSafeLimit){$SafeLimit = $customSafeLimit}
+		else{$SafeLimit = 2}
+	}
+	
+	elseif($Limit -eq 5){
+		Write-Host "To avoid account lockouts, our limit will be set to " -NoNewLine
+		Write-Host "3" -ForegroundColor Yellow
+		Write-Host "Changing this to a higher value will most probably lockout accounts.." -ForegroundColor Yellow
+		Write-Host ""
+		$customSafeLimit = Read-Host "Do you want to set a custom limit ? Please provide a number or leave empty"
+		Write-Host ""
+		if($customSafeLimit){$SafeLimit = $customSafeLimit}
+		else{$SafeLimit = 3}
+	}
+	
+	elseif($Limit -eq 6){
+		Write-Host "To avoid account lockouts, our limit will be set to " -NoNewLine
+		Write-Host "4" -ForegroundColor Yellow
+		Write-Host "Changing this to a higher value will most probably lockout accounts.." -ForegroundColor Yellow
+		Write-Host ""
+		$customSafeLimit = Read-Host "Do you want to set a custom limit ? Please provide a number or leave empty"
+		Write-Host ""
+		if($customSafeLimit){$SafeLimit = $customSafeLimit}
+		else{$SafeLimit = 4}
+	}
 
 	else{
 		Write-Host "To avoid account lockouts, our limit will be set to " -NoNewLine
-		Write-Host ($Limit - 2) -ForegroundColor Yellow
+		Write-Host "5" -ForegroundColor Yellow
 		Write-Host "However, a fine-grained password policy may be in place.."
 		Write-Host "Think twice before proceeding, or you may end up locking out accounts.." -ForegroundColor Yellow
 		Write-Host ""
 		$customSafeLimit = Read-Host "Do you want to set a custom limit ? Please provide a number or leave empty"
 		Write-Host ""
 		if($customSafeLimit){$SafeLimit = $customSafeLimit}
-		else{$SafeLimit = $Limit - 2}
+		else{$SafeLimit = 5}
 	}
 
-	Write-Host "To avoid account lockouts, spraying will be conducted on targets having a 'badPwdCount' lower or equal to " -ForegroundColor Yellow -NoNewLine
+	Write-Host "Spraying will be conducted on targets having a 'badPwdCount' lower than " -ForegroundColor Yellow -NoNewLine
 	Write-Host "$SafeLimit" -ForegroundColor Cyan
 	Write-Host ""
 
@@ -796,15 +842,18 @@ if(!$TargetUse){
 			Write-Host ""
 
 			# Check the username:password pairs for matches with the Domain Admins or Enterprise Admins groups
-			Write-Host "Checking valid credentials against Privileged Groups" -ForegroundColor Cyan
-			
-			$trackerthree = $null
+			Write-Host "Checking users' group membership..." -ForegroundColor Cyan
 
 			foreach ($validpair in $validpairs) {
 				$username, $password = $validpair -split ':'
 				
 				$isAdmin = $false
+				$isnonAdmin = $false
 				$adminGroups = $null
+				$nonAdminGroups = $null
+				
+				$adminGroups = @()
+				$nonAdminGroups = @()
 				
 				$groups = Get-ADPrincipalGroupMembership -Identity $username
 				
@@ -813,28 +862,59 @@ if(!$TargetUse){
 						$adminGroups += ($group.Name + "`n")
 						$isAdmin = $true
 					}
+					
+					elseif($group.Name -eq "Domain Users"){}
+					
+					else {
+						$nonAdminGroups += ($group.Name + "`n")
+						$isnonAdmin = $true
+					}
 				}
 				
-				$adminGroups = ($adminGroups | Out-String) -split "`n"
-				$adminGroups = $adminGroups.Trim()
-				$adminGroups = $adminGroups | Where-Object { $_ -ne "" }
+				if($adminGroups){
+					$adminGroups = ($adminGroups | Out-String) -split "`n"
+					$adminGroups = $adminGroups.Trim()
+					$adminGroups = $adminGroups | Where-Object { $_ -ne "" }
+				}
+				
+				if($nonAdminGroups){
+					$nonAdminGroups = ($nonAdminGroups | Out-String) -split "`n"
+					$nonAdminGroups = $nonAdminGroups.Trim()
+					$nonAdminGroups = $nonAdminGroups | Where-Object { $_ -ne "" }
+				}
 
 				# If the user is a member of either group, output a warning
 				if ($isAdmin) {
-					$trackerthree = "something"
-					Write-Host "[+] " -ForegroundColor Green -NoNewLine;
-					Write-Host "The username " -NoNewLine;
+					Write-Host "[+] " -ForegroundColor Yellow -NoNewLine;
 					Write-Host "$username" -ForegroundColor Green -NoNewLine;
 					Write-Host " with password " -NoNewLine;
 					Write-Host "$password" -ForegroundColor Green -NoNewLine;
 					Write-Host " is a member of the following groups: " -NoNewLine;
-					Write-Host "$($adminGroups -join ', ')" -ForegroundColor Yellow;
+					Write-Host "$($adminGroups -join ', ')" -ForegroundColor Yellow -NoNewLine;
+					if ($isnonAdmin) {
+						Write-Host ", $($nonAdminGroups -join ', ')";
+					}
+					else{
+						Write-Host ""
+					}
 				}
-			}
-			
-			if(!$trackerthree){
-				Write-Host "[-] " -ForegroundColor Red -NoNewLine;
-				Write-Host "None of the users belongs to a group that has 'Admin' in its name"
+				
+				elseif($isnonAdmin){
+					Write-Host "[+] " -ForegroundColor Yellow -NoNewLine;
+					Write-Host "$username" -ForegroundColor Green -NoNewLine;
+					Write-Host " with password " -NoNewLine;
+					Write-Host "$password" -ForegroundColor Green -NoNewLine;
+					Write-Host " is a member of the following groups: " -NoNewLine;
+					Write-Host "$($nonAdminGroups -join ', ')";
+				}
+				
+				else{
+					Write-Host "[+] " -ForegroundColor Yellow -NoNewLine;
+					Write-Host "$username" -ForegroundColor Green -NoNewLine;
+					Write-Host " with password " -NoNewLine;
+					Write-Host "$password" -ForegroundColor Green -NoNewLine;
+					Write-Host " is a member of Domain Users only";
+				}
 			}
 			
 		}
@@ -934,3 +1014,5 @@ else{
 	Write-Host "$pwd\$queryDomain-passwords.txt"
 	Write-Host ""
 }
+
+# Test USERNAME:USERNAME
