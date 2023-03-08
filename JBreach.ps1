@@ -976,9 +976,11 @@ if(!$TargetUse){
 		}
 
 		# Save emails to file
+		$finalemails = ($finalemails | Sort-Object -Unique)
 		$finalemails | Out-File -FilePath "$pwd\$queryDomain-emails.txt"
 
 		# Save passwords to file
+		$finalpasswords = ($finalpasswords | Sort-Object -Unique -CaseSensitive)
 		$finalpasswords | Out-File -FilePath "$pwd\$queryDomain-passwords.txt"
 		
 		Write-Host "$pwd\$queryDomain-master.txt"
@@ -1002,9 +1004,11 @@ else{
 	}
 
 	# Save emails to file
+	$finalemails = ($finalemails | Sort-Object -Unique)
 	$finalemails | Out-File -FilePath "$pwd\$queryDomain-emails.txt"
 
 	# Save passwords to file
+	$finalpasswords = ($finalpasswords | Sort-Object -Unique -CaseSensitive)
 	$finalpasswords | Out-File -FilePath "$pwd\$queryDomain-passwords.txt"
 	
 	Write-Host "$pwd\$queryDomain-master.txt"
