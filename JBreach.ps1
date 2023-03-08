@@ -976,10 +976,16 @@ if(!$TargetUse){
 		}
 
 		# Save emails to file
+		$finalemails = ($finalemails | Out-String) -split "`n"
+		$finalemails = $finalemails.Trim()
+		$finalemails = $finalemails | Where-Object { $_ -ne "" }
 		$finalemails = ($finalemails | Sort-Object -Unique)
 		$finalemails | Out-File -FilePath "$pwd\$queryDomain-emails.txt"
 
 		# Save passwords to file
+		$finalpasswords = ($finalpasswords | Out-String) -split "`n"
+		$finalpasswords = $finalpasswords.Trim()
+		$finalpasswords = $finalpasswords | Where-Object { $_ -ne "" }
 		$finalpasswords = ($finalpasswords | Sort-Object -Unique -CaseSensitive)
 		$finalpasswords | Out-File -FilePath "$pwd\$queryDomain-passwords.txt"
 		
@@ -1004,10 +1010,16 @@ else{
 	}
 
 	# Save emails to file
+	$finalemails = ($finalemails | Out-String) -split "`n"
+	$finalemails = $finalemails.Trim()
+	$finalemails = $finalemails | Where-Object { $_ -ne "" }
 	$finalemails = ($finalemails | Sort-Object -Unique)
 	$finalemails | Out-File -FilePath "$pwd\$queryDomain-emails.txt"
 
 	# Save passwords to file
+	$finalpasswords = ($finalpasswords | Out-String) -split "`n"
+	$finalpasswords = $finalpasswords.Trim()
+	$finalpasswords = $finalpasswords | Where-Object { $_ -ne "" }
 	$finalpasswords = ($finalpasswords | Sort-Object -Unique -CaseSensitive)
 	$finalpasswords | Out-File -FilePath "$pwd\$queryDomain-passwords.txt"
 	
