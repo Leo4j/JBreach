@@ -940,7 +940,7 @@ if(!$TargetUse){
 			if ($allusersemail -match "@(.+)$") {
 				$domain = $Matches[1]
 				if (-not $alldomains.Contains($domain)) {
-					$domains += ($domain + "`n")
+					$domains += ($domain.ToLower() + "`n")
 				}
 			}
 		}
@@ -949,7 +949,7 @@ if(!$TargetUse){
 		$domains = ($domains | Out-String) -split "`n"
 		$domains = $domains.Trim()
 		$domains = $domains | Where-Object { $_ -ne "" }
-		$domains = ($domains | Sort-Object | Get-Unique)
+		$domains = ($domains | Sort-Object -Unique)
 		$domains = $domains | Where-Object {$_ -ne $queryDomain}
 		
 		if($domains){
