@@ -15,3 +15,7 @@ Finally, after a successful login attempt, the tool will check whether the user 
 `iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/Leo4j/JBreach/main/JBreach.ps1')`
 
 To access breached credentials, you will need a Dehashed account and API key, or you can provide your own list, or you can use both options.
+
+Credits:
+
+I got some inspiration from the following tool: Invoke-CleverSpray - https://github.com/wavestone-cdt/Invoke-CleverSpray
